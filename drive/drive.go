@@ -119,6 +119,10 @@ func (d *Client) checkChanges(firstCheck bool) {
 		objects := make([]*APIObject, 0)
 		for _, change := range results.Changes {
 			Log.Tracef("Change %v", change)
+			if nil == change.File {
+				Log.Warningf("Skipping nil file")
+				continue
+			}
 
 			if change.Removed || (nil != change.File && change.File.ExplicitlyTrashed) {
 				if err := d.cache.DeleteObject(change.FileId); nil != err {
